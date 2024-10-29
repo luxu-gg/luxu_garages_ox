@@ -1,0 +1,57 @@
+{
+  "name": "luxu_garages",
+  "author": "luxu@luxu.gg",
+  "version": "1.0.0",
+  "license": "",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "web:dev": "cd web && vite dev",
+    "build": "node scripts/build.js",
+    "watch": "node scripts/build.js --watch",
+    "prettier": "prettier ./{src,web}/**/*.{ts,tsx} --write",
+    "eslint": "eslint ./{src,web}/**/*.{ts,tsx}"
+  },
+  "keywords": [
+    "fivem"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luxu-gg/luxu_garages_ox.git"
+  },
+  "bugs": "https://github.com/luxu-gg/luxu_garages_ox/issues",
+  "devDependencies": {
+    "@citizenfx/client": "latest",
+    "@citizenfx/server": "latest",
+    "@eslint/js": "^9.9.0",
+    "@overextended/fx-utils": "^0.0.4",
+    "@overextended/ox_core": "^1.1.3",
+    "@overextended/oxmysql": "^1.3.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^20.16.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.1.0",
+    "@typescript-eslint/parser": "^8.1.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.23.1",
+    "eslint": "^9.9.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "jotai": "^2.10.1",
+    "postcss": "^8.4.47",
+    "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.1.0",
+    "vite": "^5.4.1"
+  },
+  "dependencies": {
+    "@jgoz/esbuild-plugin-typecheck": "^4.0.1",
+    "@nativewrappers/fivem": "latest",
+    "@overextended/ox_lib": "latest",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

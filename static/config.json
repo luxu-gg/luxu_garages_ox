@@ -1,0 +1,42 @@
+{
+  "CustomVehicleImageSource": "https://cfx-nui-luxu_garage_ox/vehicles/%s.png",
+  "Commands": {
+    "givecar": {
+      "enabled": true,
+      "name": "givecar",
+      "help": {
+        "model": "The model of the vehicle you want to spawn"
+      }
+    }
+  },
+  "Prices": {
+    "transfer": 2500,
+    "impound": 3000,
+    "transfer_from_impound": 5000
+  },
+
+  "Impound": {
+    "enabled": true,
+    "spawn": [408.0, -1636.0, 29.0],
+    "withdraw": [408.0, -1636.0, 29.0],
+    "blip": {
+      "enabled": true,
+      "sprite": 67,
+      "color": 1
+    }
+  },
+  "Garages": {
+    "pillbox": {
+      "id": "pillbox",
+      "label": "Pillbox Garage",
+      "deposit": [212.8668, -795.8473, 30.8645],
+      "withdraw": [215.3754, -809.8752, 30.7387],
+      "spawn": [228.3365, -809.0613, 29.8529, 158.3198],
+      "blip": {
+        "enabled": true,
+        "sprite": 357,
+        "color": 3
+      }
+    }
+  }
+}

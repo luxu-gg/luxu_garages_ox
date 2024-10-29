@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ox TS Boilerplate</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+  <style>
+    body {
+      --sb-track-color: #232e33;
+      --sb-thumb-color: #6baf8d;
+      --sb-size: 14px;
+    }
+
+    body::-webkit-scrollbar {
+      width: var(--sb-size);
+    }
+
+    body::-webkit-scrollbar-track {
+      background: var(--sb-track-color);
+      border-radius: 3px;
+    }
+
+    body::-webkit-scrollbar-thumb {
+      background: var(--sb-thumb-color);
+      border-radius: 3px;
+    }
+
+    @supports not selector(::-webkit-scrollbar) {
+      body {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+      }
+    }
+  </style>
+</html>
