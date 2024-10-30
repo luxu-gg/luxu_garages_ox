@@ -62,13 +62,16 @@ onClientCallback(`${cache.resource}:transfer`, async (source, id: number) => {
     return false;
   }
 
-  await account.removeBalance({ amount: transferFee, message: 'Vehicle transfer fee', overdraw: false });
-
   const success = await oxmysql.update('UPDATE vehicles SET stored = ? WHERE id = ? AND owner = ?', [
     currentGarage,
     id,
     player.charId,
   ]);
+
+  if (success === 1) {
+    await account.removeBalance({ amount: transferFee, message: 'Vehicle transfer fee', overdraw: false });
+  }
+
   return success === 1;
 });
 onClientCallback(`${cache.resource}:recover`, async (source, id: number) => {
