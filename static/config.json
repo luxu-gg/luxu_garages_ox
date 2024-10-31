@@ -37,6 +37,18 @@
         "sprite": 357,
         "color": 3
       }
+    },
+    "downtown_vinewood": {
+      "id": "downtown_vinewood",
+      "label": "Downtown Vinewood",
+      "deposit": [612.9952, 82.4021, 91.4803],
+      "withdraw": [598.6633, 90.3368, 92.8209],
+      "spawn": [598.6259, 98.8326, 92.4929, 249.9346],
+      "blip": {
+        "enabled": true,
+        "sprite": 357,
+        "color": 3
+      }
     }
   }
 }

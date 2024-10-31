@@ -1,4 +1,4 @@
-import { GetPlayer, CreateVehicle, GetVehicle, type OxVehicle, SpawnVehicle } from '@overextended/ox_core/server';
+import { GetPlayer, CreateVehicle, GetVehicle, SpawnVehicle } from '@overextended/ox_core/server';
 import { addCommand, cache, onClientCallback } from '@overextended/ox_lib/server';
 import { oxmysql } from '@overextended/oxmysql';
 import type { OwnedVehicle } from '@common/types';
@@ -32,15 +32,16 @@ onClientCallback(`${cache.resource}:withdraw`, async (source, id: number) => {
   const player = GetPlayer(source);
   if (!player) return false;
   const ped = player.ped;
-  const playerCurrentGarage = Player(source).state.currentGarage as keyof typeof userConfig.Garages;
+  const currentGarage = (Player(source).state.currentGarage || null) as keyof typeof userConfig.Garages;
+  if (currentGarage === null) return false;
   const isStored = await oxmysql.prepare<1>('SELECT 1 FROM vehicles WHERE id = ? AND stored = ? AND owner= ?', [
     id,
-    playerCurrentGarage,
+    currentGarage,
     player.charId,
   ]);
   if (!isStored) return false;
 
-  const garage = userConfig.Garages[playerCurrentGarage];
+  const garage = userConfig.Garages[currentGarage];
   if (!garage) return false;
   const vehicle = await SpawnVehicle(id, garage.spawn, garage.spawn[3]);
   if (!vehicle) return false;
@@ -51,7 +52,8 @@ onClientCallback(`${cache.resource}:withdraw`, async (source, id: number) => {
 });
 onClientCallback(`${cache.resource}:transfer`, async (source, id: number) => {
   const player = GetPlayer(source);
-  const currentGarage = (Player(source).state.currentGarage || '') as keyof typeof userConfig.Garages;
+  const currentGarage = (Player(source).state.currentGarage || null) as keyof typeof userConfig.Garages;
+  if (currentGarage === null) return false;
   if (!player) return false;
 
   const account = await player.getAccount();
@@ -62,21 +64,24 @@ onClientCallback(`${cache.resource}:transfer`, async (source, id: number) => {
     return false;
   }
 
-  const success = await oxmysql.update('UPDATE vehicles SET stored = ? WHERE id = ? AND owner = ?', [
-    currentGarage,
-    id,
-    player.charId,
-  ]);
+  const success =
+    (await oxmysql.update('UPDATE vehicles SET stored = ? WHERE id = ? AND owner = ? LIMIT 1', [
+      currentGarage,
+      id,
+      player.charId,
+    ])) === 1;
 
-  if (success === 1) {
+  if (success) {
     await account.removeBalance({ amount: transferFee, message: 'Vehicle transfer fee', overdraw: false });
+    return true;
   }
-
-  return success === 1;
+  return false;
 });
+
 onClientCallback(`${cache.resource}:recover`, async (source, id: number) => {
   const player = GetPlayer(source);
-  const currentGarage = (Player(source).state.currentGarage || '') as keyof typeof userConfig.Garages;
+  const currentGarage = (Player(source).state.currentGarage || null) as keyof typeof userConfig.Garages;
+  if (currentGarage === null) return false;
   const garage = userConfig.Garages[currentGarage];
   if (!player || !garage) return false;
   const account = await player.getAccount();
@@ -85,9 +90,21 @@ onClientCallback(`${cache.resource}:recover`, async (source, id: number) => {
   if (balance < impoundTransferFee) {
     return false;
   }
-  await account.removeBalance({ amount: impoundTransferFee, message: 'Transfer from impound', overdraw: false });
 
-  return true;
+  const success =
+    (await oxmysql.update('UPDATE vehicles SET stored = ? WHERE id = ? AND owner = ? LIMIT 1', [
+      currentGarage,
+      id,
+      player.charId,
+    ])) === 1;
+
+  if (success) {
+    await account.removeBalance({ amount: impoundTransferFee, message: 'Transfer from impound', overdraw: false });
+
+    return true;
+  }
+
+  return false;
 });
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

@@ -1,6 +1,8 @@
 import userConfig from '@common/config';
 import { cache, hideTextUI, notify, Point, showTextUI, triggerServerCallback } from '@overextended/ox_lib/client';
+import Locale from '@common/locale';
 import type { OwnedVehicle } from '@common/types';
+import { LoadFile, LoadJsonFile } from 'utils';
 
 function openGarage(menu: string) {
   SendNUIMessage({
@@ -16,13 +18,13 @@ async function storeVehicle() {
     notify({
       duration: 4000,
       type: 'success',
-      title: 'Vehicle stored',
+      title: Locale('vehicle_stored'),
     });
   } else {
     notify({
       duration: 4000,
       type: 'error',
-      title: 'Failed to store vehicle',
+      title: Locale('cannot_store_this_vehicle'),
     });
   }
 }
@@ -45,6 +47,7 @@ RegisterNuiCallback('withdraw', async (id: number, cb: (result: boolean) => void
   const result = (await triggerServerCallback<boolean>(`${cache.resource}:withdraw`, null, id)) as boolean;
   cb(result);
 });
+
 // Recover from impound
 RegisterNuiCallback('recover', async (id: number, cb: (result: boolean) => void) => {
   const result = (await triggerServerCallback<boolean>(`${cache.resource}:recover`, null, id)) as boolean;
@@ -52,13 +55,13 @@ RegisterNuiCallback('recover', async (id: number, cb: (result: boolean) => void)
     notify({
       duration: 4000,
       type: 'success',
-      title: 'Vehicle recovered',
+      title: Locale('vehicle_recovered'),
     });
   } else {
     notify({
       duration: 4000,
       type: 'error',
-      title: 'Not enough money to recover vehicle',
+      title: Locale('not_enough_money'),
     });
   }
   cb(result);
@@ -69,22 +72,23 @@ RegisterNuiCallback('transfer', async (id: number, cb: (result: boolean) => void
     notify({
       duration: 4000,
       type: 'success',
-      title: 'Vehicle transferred',
+      title: Locale('vehicle_transferred'),
     });
   } else {
     notify({
       duration: 4000,
       type: 'error',
-      title: 'Not enough money to transfer vehicle',
+      title: Locale('not_enough_money'),
     });
   }
   cb(result);
 });
 
 setImmediate(() => {
+  const locales = LoadJsonFile(`locales/${GetConvar('ox:locale', 'en')}.json`);
   SendNUIMessage({
-    action: 'getConfig',
-    data: userConfig,
+    action: 'getConfigAndLocales',
+    data: { config: userConfig, locales: locales },
   });
 
   Object.values(userConfig.Garages).forEach((g) => {

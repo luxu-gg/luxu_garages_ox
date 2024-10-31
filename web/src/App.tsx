@@ -2,50 +2,30 @@ import { useEffect, useRef, useState } from 'react';
 import { isEnvBrowser } from './utils/misc';
 import { useNuiEvent } from './hooks/useNuiEvent';
 import { fetchNui } from './utils/fetchNui';
-import { Withdraw } from './pages/withdraw';
+import { Withdraw } from './pages/Withdraw';
 import type { Config } from '@common/config';
 import { useSetAtom } from 'jotai';
 import { userConfig } from './utils/config';
+import { localesAtom } from './utils/locales';
+import type { RawLocales } from '@common/locale';
 
 function App() {
-  const [menu, setMenu] = useState(isEnvBrowser() ? 'withdraw' : false);
+  const [menu, setMenu] = useState<string | false | null>(isEnvBrowser() ? 'withdraw' : null);
   const setUserConfig = useSetAtom(userConfig);
+  const setLocales = useSetAtom(localesAtom);
   const containerEl = useRef<HTMLDivElement>(null);
 
-  useNuiEvent('getConfig', (config: Config) => {
+  useNuiEvent('getConfigAndLocales', ({ config, locales }: { config: Config; locales: Record<RawLocales, string> }) => {
     setUserConfig(config);
+    setLocales(locales);
   });
   useNuiEvent('setMenu', (data: { menu?: string }) => {
-    containerEl.current?.animate(
-      [
-        { opacity: 0, transform: 'translateY(20vh)' },
-        { opacity: 1, transformY: 'translateY(0)' },
-      ],
-      {
-        duration: 200,
-        easing: 'ease-in',
-        fill: 'forwards',
-      }
-    );
     setMenu(data.menu || false);
   });
 
   function close() {
     void fetchNui('exit');
-    if (!containerEl.current) return;
-    containerEl.current.animate(
-      [
-        { opacity: 1, transform: 'translateY(0)' },
-        { opacity: 0, transform: 'translateY(20vh)' },
-      ],
-      {
-        duration: 200,
-        easing: 'ease-out',
-        fill: 'forwards',
-      }
-    ).onfinish = () => {
-      setMenu(false);
-    };
+    setMenu(false);
   }
 
   useEffect(() => {
@@ -58,7 +38,7 @@ function App() {
 
   return (
     <div className="boilerplate-wrapper">
-      <div ref={containerEl}>{menu == 'withdraw' && <Withdraw close={close} />}</div>
+      <div ref={containerEl}>{menu !== null && <Withdraw isVisible={menu === 'withdraw'} close={close} />}</div>
     </div>
   );
 }

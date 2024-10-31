@@ -1,4 +1,11 @@
 {
-  "hello": "hello ${world}",
-  "world": "world"
+  "vehicle_recovered": "Your vehicle has been recovered.",
+  "not_enough_money": "You do not have enough money for this operation.",
+  "vehicle_transferred": "Vehicle transferred to this garage.",
+  "cannot_store_this_vehicle": "You cannot store this vehicle",
+  "vehicle_stored": "Vehicle stored in this garage.",
+  "withdraw": "Withdraw",
+  "transfer": "Transfer",
+  "recover": "Recover",
+  "outside": "Outside"
 }
