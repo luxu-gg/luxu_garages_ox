@@ -133,7 +133,7 @@ export const Withdraw = (props: { close: () => void; isVisible: boolean }) => {
           </div>
         )}
         {vehicles.map((vehicle) => (
-          <div key={vehicle.id} className="grid grid-cols-[auto_1fr_12rem]">
+          <div key={vehicle.id} className="grid grid-cols-[auto_1fr_12rem] border-b border-rhino-300">
             <VehicleImage model={vehicle.model} />
             <div className="flex flex-col justify-center ml-4 text-xl">
               <p className="capitalize ">{vehicle.model}</p>
